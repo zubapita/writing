@@ -1,0 +1,110 @@
+name: Validate Images
+
+on:
+  push:
+    paths:
+      - "**/*.jpg"
+      - "**/*.jpeg"
+      - "**/*.png"
+      - "**/*.webp"
+      - "**/*.tiff"
+      - "**/*.bmp"
+      - "**/*.gif"
+      - "**/*.md"
+  pull_request:
+    paths:
+      - "**/*.jpg"
+      - "**/*.jpeg"
+      - "**/*.png"
+      - "**/*.webp"
+      - "**/*.tiff"
+      - "**/*.bmp"
+      - "**/*.gif"
+      - "**/*.md"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ImageMagick
+        run: sudo apt-get install -y imagemagick
+
+      - name: Validate image formats
+        run: |
+          echo "=== 画像フォーマット検証 ==="
+          errors=0
+
+          # assets/no_resize/ 以外で JPEG でない画像を検出
+          while IFS= read -r img; do
+            [ -z "$img" ] && continue
+            ext="${img##*.}"
+            ext_lower=$(echo "$ext" | tr '[:upper:]' '[:lower:]')
+            if [ "$ext_lower" != "jpg" ] && [ "$ext_lower" != "jpeg" ]; then
+              echo "ERROR: JPEG以外の画像: $img"
+              errors=$((errors + 1))
+            fi
+          done < <(find . -type f \( -iname "*.png" -o -iname "*.webp" -o -iname "*.tiff" -o -iname "*.tif" -o -iname "*.bmp" -o -iname "*.gif" -o -iname "*.jpg" -o -iname "*.jpeg" \) -not -path "./.git/*" -not -path "./assets/no_resize/*" | sed 's|^\./||')
+
+          if [ "$errors" -gt 0 ]; then
+            echo ""
+            echo "JPEG以外の画像が ${errors} 件見つかりました。"
+            echo "pre-commit フックで変換するか、手動で変換してください。"
+            exit 1
+          fi
+
+          echo "OK: すべての画像がJPEG形式です"
+
+      - name: Validate image dimensions
+        run: |
+          echo "=== 画像サイズ検証 ==="
+          errors=0
+
+          while IFS= read -r img; do
+            [ -z "$img" ] && continue
+            width=$(identify -format "%w" "$img" 2>/dev/null || echo "0")
+            if [ "$width" -gt 1920 ]; then
+              echo "ERROR: FHD超過 (${width}px): $img"
+              errors=$((errors + 1))
+            fi
+          done < <(find . -type f \( -iname "*.jpg" -o -iname "*.jpeg" \) -not -path "./.git/*" -not -path "./assets/no_resize/*" | sed 's|^\./||')
+
+          if [ "$errors" -gt 0 ]; then
+            echo ""
+            echo "FHD(1920px)を超える画像が ${errors} 件見つかりました。"
+            exit 1
+          fi
+
+          echo "OK: すべての画像がFHD以下です"
+
+      - name: Validate markdown image links
+        run: |
+          echo "=== マークダウンリンク検証 ==="
+          errors=0
+
+          while IFS= read -r md; do
+            [ -z "$md" ] && continue
+            # ![alt](path) 形式のリンクを抽出
+            grep -oP '!\[.*?\]\(\K[^)]+' "$md" 2>/dev/null | while read -r link; do
+              # 外部URLはスキップ
+              if echo "$link" | grep -qE "^https?://"; then
+                continue
+              fi
+              # 相対パスを解決
+              dir=$(dirname "$md")
+              resolved="$dir/$link"
+              if [ ! -f "$resolved" ] && [ ! -f "$link" ]; then
+                echo "ERROR: リンク切れ - $md → $link"
+                errors=$((errors + 1))
+              fi
+            done
+          done < <(find . -name "*.md" -not -path "./.git/*" | sed 's|^\./||')
+
+          if [ "$errors" -gt 0 ]; then
+            echo ""
+            echo "リンク切れが見つかりました。"
+            exit 1
+          fi
+
+          echo "OK: すべてのリンクが有効です"

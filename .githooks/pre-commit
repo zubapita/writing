@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# ---------------------------------------------------------
+# pre-commit: 画像をJPEG変換・FHDリサイズ（縮小のみ）
+#   - assets/no_resize/ 以下は対象外
+#   - 元画像を削除しJPEGに置換
+#   - マークダウン内のリンクを更新
+# ---------------------------------------------------------
+
+QUALITY=85
+MAX_WIDTH=1920
+EXCLUDE_DIR="assets/no_resize/"
+IMAGE_EXTS="png|webp|tiff|tif|bmp|gif|jpeg|jpg"
+
+# ImageMagick の存在確認
+if ! command -v magick &>/dev/null; then
+  echo "ERROR: ImageMagick がインストールされていません"
+  echo "  brew install imagemagick"
+  exit 1
+fi
+
+# ステージングされた画像ファイルを取得（削除されたファイルは除外）
+staged_images=$(git diff --cached --name-only --diff-filter=d | grep -iE "\.(${IMAGE_EXTS})$" | grep -v "^${EXCLUDE_DIR}" || true)
+
+if [ -z "$staged_images" ]; then
+  exit 0
+fi
+
+echo "=== 画像最適化 pre-commit フック ==="
+
+converted_files=()
+
+for img in $staged_images; do
+  if [ ! -f "$img" ]; then
+    continue
+  fi
+
+  basename_noext="${img%.*}"
+  ext="${img##*.}"
+  ext_lower=$(echo "$ext" | tr '[:upper:]' '[:lower:]')
+  dest="${basename_noext}.jpg"
+
+  echo "処理中: $img"
+
+  # 現在の幅を取得
+  width=$(magick identify -format "%w" "$img" 2>/dev/null || echo "0")
+
+  # リサイズオプション（FHD超の場合のみ縮小）
+  resize_opt=""
+  if [ "$width" -gt "$MAX_WIDTH" ]; then
+    resize_opt="-resize ${MAX_WIDTH}x>"
+    echo "  リサイズ: ${width}px → ${MAX_WIDTH}px"
+  fi
+
+  # JPEG変換
+  if [ "$ext_lower" = "jpg" ] || [ "$ext_lower" = "jpeg" ]; then
+    # 既にJPEGの場合: リサイズ・再圧縮のみ
+    magick "$img" $resize_opt -quality "$QUALITY" "$img"
+    echo "  最適化完了: $img"
+    git add "$img"
+  else
+    # 他形式 → JPEG変換
+    magick "$img" $resize_opt -quality "$QUALITY" "$dest"
+    echo "  変換: $img → $dest"
+
+    # 元ファイルを削除してJPEGをステージング
+    git rm --cached "$img" >/dev/null 2>&1
+    rm -f "$img"
+    git add "$dest"
+
+    converted_files+=("${img}|${dest}")
+  fi
+done
+
+# マークダウン内のリンクを更新
+if [ ${#converted_files[@]} -gt 0 ]; then
+  echo ""
+  echo "--- マークダウンリンク更新 ---"
+
+  md_files=$(find . -name "*.md" -not -path "./.git/*" | sed 's|^\./||')
+
+  for entry in "${converted_files[@]}"; do
+    old_path="${entry%%|*}"
+    new_path="${entry##*|}"
+
+    if [ -z "$md_files" ]; then
+      continue
+    fi
+
+    for md in $md_files; do
+      if grep -qF "$old_path" "$md" 2>/dev/null; then
+        sed -i '' "s|${old_path}|${new_path}|g" "$md"
+        git add "$md"
+        echo "  更新: $md ($old_path → $new_path)"
+      fi
+    done
+  done
+fi
+
+echo "=== 画像最適化完了 ==="
