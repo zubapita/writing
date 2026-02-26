@@ -609,3 +609,11 @@ To github-zuba:zubapita/writing.git
    40381c4..be689ae  main -> main
 2026-02-26 14:44:25 プッシュ成功
 2026-02-26 14:49:25 変更を検出
+[main c443253] auto:  2 files changed, 9 insertions(+)
+ 2 files changed, 9 insertions(+)
+ create mode 100644 "20_reference/\343\202\267\343\203\247\343\203\274\343\203\210\345\213\225\347\224\273\347\224\237\346\210\220/00_README.md"
+2026-02-26 14:49:26 コミット成功
+To github-zuba:zubapita/writing.git
+   be689ae..c443253  main -> main
+2026-02-26 14:49:28 プッシュ成功
+2026-02-26 14:54:28 変更を検出
