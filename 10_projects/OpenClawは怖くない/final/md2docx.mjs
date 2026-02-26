@@ -162,7 +162,7 @@ const doc = new Document({
     headers: {
       default: new Header({
         children: [new Paragraph({
-          children: [new TextRun({ text: 'OpenClawは怖くない', font: 'Yu Gothic', size: 16, color: '999999' })],
+          children: [new TextRun({ text: 'OpenClawは天使か悪魔か', font: 'Yu Gothic', size: 16, color: '999999' })],
           alignment: AlignmentType.RIGHT,
         })],
       }),
