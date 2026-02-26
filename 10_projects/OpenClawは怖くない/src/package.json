@@ -1,8 +1,0 @@
-{
-  "name": "infographic-generator",
-  "version": "1.0.0",
-  "type": "module",
-  "dependencies": {
-    "@google/genai": "^1.30.0"
-  }
-}
