@@ -1993,3 +1993,13 @@ To github-zuba:zubapita/writing.git
    602792b..2cd3480  main -> main
 2026-02-27 06:26:40 プッシュ成功
 2026-02-27 06:31:40 変更を検出
+[main f9a5ee5] auto:  4 files changed, 61 insertions(+), 53 deletions(-)
+ 4 files changed, 61 insertions(+), 53 deletions(-)
+ create mode 100644 "10_projects/OpenClaw\343\201\257\343\201\251\343\201\206\345\213\225\343\201\213\343\201\231\343\201\213/docs/prompts.md"
+ create mode 100644 "10_projects/OpenClaw\343\201\257\343\201\251\343\201\206\345\213\225\343\201\213\343\201\231\343\201\213/docs/\346\247\213\346\210\220\346\241\210.md"
+ delete mode 100644 "10_projects/OpenClaw\343\201\257\346\200\226\343\201\217\343\201\252\343\201\204/docs/\346\247\213\346\210\220\346\241\210 copy.md"
+2026-02-27 06:31:40 コミット成功
+To github-zuba:zubapita/writing.git
+   2cd3480..f9a5ee5  main -> main
+2026-02-27 06:31:42 プッシュ成功
+2026-02-27 06:36:42 変更を検出
