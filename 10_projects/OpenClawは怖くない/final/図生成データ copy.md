@@ -1,0 +1,144 @@
+# 図生成データ
+
+原稿: 原稿v3.md
+生成日: 2026-02-26
+モデル: gemini-3-pro-image-preview (Nano Banana Pro)
+
+---
+
+## fig_01: 「もう一人の自分」がPCの中にいる感覚
+
+### 生成プロンプト
+
+ENSURE ALL TEXT RENDERED IN THE IMAGE IS JAPANESE ONLY. NO ENGLISH.
+
+Create a clean, modern infographic illustration.
+Aspect ratio: 4:3 (horizontal/landscape).
+Style: concept map
+Color scheme: professional blue and white
+Background: simple light gradient, no busy patterns.
+
+Content:
+Central figure is a PC with a friendly AI mascot inside. 
+On the left, a smartphone with a chat bubble icon. 
+An arrow points from the smartphone to the PC, representing remote control.
+Inside the PC, several icons like 'File', 'Email', and 'Code' are being organized by the AI.
+
+Text elements (use these exact Japanese strings):
+The main title must be exactly: "PC内のAIスタッフ"
+Labels must be exactly: "スマホから指示", "自律実行", "自宅のPC"
+
+Text rendering rules:
+- All text in the image must be in Japanese
+- Display text in large, bold font with high contrast against background
+- Add white outline (2-4px) around text for readability
+- Keep generous spacing between text elements
+
+### キャプション
+
+外出先からメッセージを送るだけで、自宅のPC内のAIが自律的に作業をこなす。まるで「もう一人の自分」がPCの中にいるような感覚だ。
+
+---
+
+## fig_02: 既存のAIツールと何が違うのか
+
+### 生成プロンプト
+
+ENSURE ALL TEXT RENDERED IN THE IMAGE IS JAPANESE ONLY. NO ENGLISH.
+
+Create a clean, modern infographic illustration.
+Aspect ratio: 4:3 (horizontal/landscape).
+Style: architecture diagram
+Color scheme: vibrant teal and navy
+Background: simple solid color.
+
+Content:
+A central 'OpenClaw' core surrounded by 5 distinct blocks representing its unique features.
+1. A clock icon (Always on)
+2. A filing cabinet icon (Memory)
+3. A puzzle piece icon (Skills)
+4. Diverse chat icons like Slack/LINE (Multi-channel)
+5. Multiple robot heads (Multi-agent)
+
+Text elements (use these exact Japanese strings):
+The main title must be exactly: "OpenClawの5大特徴"
+Labels must be exactly: "常時稼働", "記憶", "拡張性", "多機能", "複数連携"
+
+Text rendering rules:
+- All text in the image must be in Japanese
+- Display text in large, bold font with high contrast against background
+- Add white outline (2-4px) around text for readability
+- Keep generous spacing between text elements
+
+### キャプション
+
+従来の「受動的」なAIとは異なり、OpenClawは能動的な常時稼働や長期記憶、スキルの拡張性など、5つの強力な独自機能を備えている。
+
+---
+
+## fig_03: リスクは存在する。しかし対処できる
+
+### 生成プロンプト
+
+ENSURE ALL TEXT RENDERED IN THE IMAGE IS JAPANESE ONLY. NO ENGLISH.
+
+Create a clean, modern infographic illustration.
+Aspect ratio: 4:3 (horizontal/landscape).
+Style: comparison
+Color scheme: alert red and safety green
+Background: simple light gray.
+
+Content:
+Split screen layout. 
+Left side (Red): Risks like a bug icon (Injection) and an unlocked lock (Leakage).
+Right side (Green): Solutions like a shield icon (Security), a box (Dedicated machine), and a refresh icon (Update).
+Arrows showing the transition from risk to safety via these measures.
+
+Text elements (use these exact Japanese strings):
+The main title must be exactly: "リスクと対策"
+Labels must be exactly: "外部攻撃", "情報漏洩", "専用機", "最新版"
+
+Text rendering rules:
+- All text in the image must be in Japanese
+- Display text in large, bold font with high contrast against background
+- Add white outline (2-4px) around text for readability
+- Keep generous spacing between text elements
+
+### キャプション
+
+強力な権限を持つゆえのリスクはあるが、専用マシンの導入や適切なセキュリティ設定、こまめなアップデートによって安全に運用できる。
+
+---
+
+## fig_04: OpenClawを仕事や生活にどう使うか
+
+### 生成プロンプト
+
+ENSURE ALL TEXT RENDERED IN THE IMAGE IS JAPANESE ONLY. NO ENGLISH.
+
+Create a clean, modern infographic illustration.
+Aspect ratio: 4:3 (horizontal/landscape).
+Style: concept map
+Color scheme: warm orange and purple
+Background: simple light gradient.
+
+Content:
+Three distinct bubbles showing the three use cases:
+1. Assistant: icons for mail and calendar.
+2. Staff: icons for reports and checking.
+3. Partner: icons for news and hobby (music/tickets).
+A person in the center interacting with these three roles.
+
+Text elements (use these exact Japanese strings):
+The main title must be exactly: "OpenClawの活用法"
+Labels must be exactly: "助手", "スタッフ", "パートナー"
+
+Text rendering rules:
+- All text in the image must be in Japanese
+- Display text in large, bold font with high contrast against background
+- Add white outline (2-4px) around text for readability
+- Keep generous spacing between text elements
+
+### キャプション
+
+OpenClawは単なるツールを超え、日々の雑務をこなすアシスタント、業務を代行するスタッフ、そして趣味を支えるパートナーとして生活に溶け込む。
