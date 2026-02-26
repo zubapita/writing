@@ -85,3 +85,27 @@ https://response.jp/article/2026/02/25/407881.html
 元記事URL
 https://response.jp/article/2026/02/25/407881.html
 ```
+（注：半角空白4文字もコードブロックを表現しています。ここでは```〜```が入れ子になると判りにくいので字下げを使いました）
+
+
+## プロンプトエンジニアリングのより専門的な知識
+
+### 日本語のまとめ記事で概要をつかむ
+
+- Zennのまとめ記事「OpenAI・Anthropic・Googleのプロンプトエンジニアリングガイドをまとめてみた」
+https://zenn.dev/shilla/articles/85b20f8263e206
+3社の公式ガイドの要点が1記事に集約されていて効率的です。
+
+- 堀内亮平氏のnote記事「2025年のプロンプトエンジニアリング」
+https://note.com/horiday018/n/nb9d6a175c2f1
+2025年現在で効果的な方法とそうでない方法が整理されていて Note、古いテクニックに振り回されずに済みます。無料のスライド資料もダウンロード可能。
+
+### しっかりと学ぶ
+
+- Learn Prompting（日本語対応）
+https://learnprompting.org/ja/docs/introduction
+初心者向けに設計されたオンライン講座で、AIやプロンプトエンジニアリングに初めて触れる方にちょうどいいスタート地点 Learn Promptingです。入門から応用まで幅広くカバーされており、日本語で読めます。非エンジニアにはこれが一番おすすめ。
+
+- Anthropic公式ドキュメント（日本語対応）
+https://docs.claude.com/ja/docs/build-with-claude/prompt-engineering/overview
+Claude向けに最適化されていますが、基本的にどのチャットボットにも通用する内容 Business Insider Japanです。「Claudeは記憶力のない優秀な新入社員のようなもの」という比喩がわかりやすく、指示の明確さや具体的な例の示し方が丁寧に解説されています
