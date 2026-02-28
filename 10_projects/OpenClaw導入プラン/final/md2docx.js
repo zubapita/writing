@@ -1,131 +1,119 @@
+// md2docx.js — Markdown with images → Word (.docx) converter
+// docx v9.x compatible, Word corruption-safe
 const {
-  Document, Packer, Paragraph, TextRun, HeadingLevel,
-  AlignmentType, ImageRun, convertMillimetersToTwip
+  Document,
+  Packer,
+  Paragraph,
+  TextRun,
+  HeadingLevel,
+  AlignmentType,
+  ImageRun,
 } = require("docx");
 const fs = require("fs");
 const path = require("path");
-const MD_PATH = path.join(__dirname, "原稿v3_with_ills.md");
-const OUT_PATH = path.join(__dirname, "原稿v3_with_ills.docx");
-const IMG_DIR = path.join(__dirname, "images");
 
-// A4 body width in mm (210 - 25*2 margins)
-const BODY_WIDTH_MM = 160;
-// Page body width in points (for scaling images)
-const BODY_WIDTH_PX = BODY_WIDTH_MM * 3.78; // ~605px at 96dpi
+const BASE_DIR = __dirname;
+const MD_PATH = path.join(BASE_DIR, "原稿v3_with_ills.md");
+const OUT_PATH = path.join(BASE_DIR, "原稿v3_with_ills.docx");
+const IMG_DIR = path.join(BASE_DIR, "images");
 
-function getImageDimensions(imgPath) {
-  // Read PNG header to get dimensions
-  const buf = fs.readFileSync(imgPath);
-  let w, h;
-  if (buf[0] === 0x89 && buf[1] === 0x50) {
-    // PNG: width at offset 16, height at offset 20 (big-endian uint32)
-    w = buf.readUInt32BE(16);
-    h = buf.readUInt32BE(20);
-  } else {
-    // fallback
-    w = 800;
-    h = 600;
+// A4 usable width at 25mm margins: 160mm ≈ 453pt ≈ 604px @96dpi
+const MAX_WIDTH_PX = 600;
+
+/**
+ * Read PNG dimensions from file header (bytes 16-23).
+ * Returns {w, h} in pixels.
+ */
+function pngDimensions(filePath) {
+  const fd = fs.openSync(filePath, "r");
+  const buf = Buffer.alloc(24);
+  fs.readSync(fd, buf, 0, 24, 0);
+  fs.closeSync(fd);
+  if (buf[0] !== 0x89 || buf[1] !== 0x50) {
+    return { w: 800, h: 600 }; // fallback
   }
-  // Scale to fit page width
-  const scale = BODY_WIDTH_PX / w;
-  return {
-    width: Math.round(w * scale),
-    height: Math.round(h * scale),
-  };
+  return { w: buf.readUInt32BE(16), h: buf.readUInt32BE(20) };
 }
 
-function parseMd(mdText) {
-  const lines = mdText.split("\n");
-  const elements = [];
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-
+/**
+ * Parse markdown into structured elements.
+ */
+function parseMarkdown(text) {
+  const lines = text.split("\n");
+  const els = [];
+  for (const line of lines) {
     // H1
-    if (line.startsWith("# ") && !line.startsWith("## ")) {
-      elements.push({ type: "h1", text: line.replace(/^# /, "") });
+    if (/^# (?!#)/.test(line)) {
+      els.push({ t: "h1", v: line.replace(/^# /, "") });
       continue;
     }
-
     // H2
-    if (line.startsWith("## ")) {
-      elements.push({ type: "h2", text: line.replace(/^## /, "") });
+    if (/^## /.test(line)) {
+      els.push({ t: "h2", v: line.replace(/^## /, "") });
       continue;
     }
-
-    // Image: ![alt](path)
-    const imgMatch = line.match(/^!\[([^\]]*)\]\(([^)]+)\)/);
-    if (imgMatch) {
-      elements.push({ type: "image", alt: imgMatch[1], src: imgMatch[2] });
+    // Image
+    const img = line.match(/^!\[([^\]]*)\]\(([^)]+)\)/);
+    if (img) {
+      els.push({ t: "img", alt: img[1], src: img[2] });
       continue;
     }
-
-    // Italic caption: *text*
-    const italicMatch = line.match(/^\*([^*]+)\*$/);
-    if (italicMatch) {
-      elements.push({ type: "caption", text: italicMatch[1] });
+    // Italic caption *...*
+    const cap = line.match(/^\*([^*]+)\*$/);
+    if (cap) {
+      els.push({ t: "cap", v: cap[1] });
       continue;
     }
-
-    // Bold subheading: **text**
-    const boldMatch = line.match(/^\*\*([^*]+)\*\*$/);
-    if (boldMatch) {
-      elements.push({ type: "bold", text: boldMatch[1] });
+    // Bold line **...**
+    const bold = line.match(/^\*\*([^*]+)\*\*$/);
+    if (bold) {
+      els.push({ t: "bold", v: bold[1] });
       continue;
     }
-
-    // Empty line
-    if (line.trim() === "") {
-      continue;
-    }
-
-    // Regular paragraph (may contain inline bold)
-    elements.push({ type: "paragraph", text: line });
+    // Blank
+    if (line.trim() === "") continue;
+    // Paragraph
+    els.push({ t: "p", v: line });
   }
-
-  return elements;
+  return els;
 }
 
-function parseInlineFormatting(text) {
-  // Split by **bold** segments
-  const parts = [];
-  const regex = /\*\*([^*]+)\*\*/g;
-  let lastIndex = 0;
-  let match;
-
-  while ((match = regex.exec(text)) !== null) {
-    if (match.index > lastIndex) {
-      parts.push({ text: text.slice(lastIndex, match.index), bold: false });
+/**
+ * Split text by **bold** segments into TextRun array.
+ */
+function inlineRuns(text, baseOpts) {
+  const runs = [];
+  const re = /\*\*([^*]+)\*\*/g;
+  let last = 0;
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > last) {
+      runs.push(new TextRun({ ...baseOpts, text: text.slice(last, m.index) }));
     }
-    parts.push({ text: match[1], bold: true });
-    lastIndex = regex.lastIndex;
+    runs.push(new TextRun({ ...baseOpts, text: m[1], bold: true }));
+    last = re.lastIndex;
   }
-
-  if (lastIndex < text.length) {
-    parts.push({ text: text.slice(lastIndex), bold: false });
+  if (last < text.length) {
+    runs.push(new TextRun({ ...baseOpts, text: text.slice(last) }));
   }
-
-  return parts;
+  return runs;
 }
 
 async function main() {
-  const mdText = fs.readFileSync(MD_PATH, "utf-8");
-  const elements = parseMd(mdText);
-
+  const md = fs.readFileSync(MD_PATH, "utf-8");
+  const els = parseMarkdown(md);
   const children = [];
 
-  for (const el of elements) {
-    switch (el.type) {
+  const FONT = "Yu Gothic";
+  const bodyRun = { font: FONT, size: 21 }; // 10.5pt in half-points
+
+  for (const el of els) {
+    switch (el.t) {
       case "h1":
         children.push(
           new Paragraph({
             children: [
-              new TextRun({
-                text: el.text,
-                bold: true,
-                size: 36, // 18pt
-                font: "Yu Gothic",
-              }),
+              new TextRun({ text: el.v, bold: true, size: 36, font: FONT }),
             ],
             heading: HeadingLevel.HEADING_1,
             spacing: { before: 240, after: 200 },
@@ -137,12 +125,7 @@ async function main() {
         children.push(
           new Paragraph({
             children: [
-              new TextRun({
-                text: el.text,
-                bold: true,
-                size: 28, // 14pt
-                font: "Yu Gothic",
-              }),
+              new TextRun({ text: el.v, bold: true, size: 28, font: FONT }),
             ],
             heading: HeadingLevel.HEADING_2,
             spacing: { before: 360, after: 160 },
@@ -154,57 +137,51 @@ async function main() {
         children.push(
           new Paragraph({
             children: [
-              new TextRun({
-                text: el.text,
-                bold: true,
-                size: 22, // 11pt
-                font: "Yu Gothic",
-              }),
+              new TextRun({ text: el.v, bold: true, size: 22, font: FONT }),
             ],
             spacing: { before: 240, after: 80 },
           })
         );
         break;
 
-      case "image": {
-        const imgPath = path.join(IMG_DIR, path.basename(el.src));
+      case "img": {
+        const imgPath = path.resolve(IMG_DIR, path.basename(el.src));
         if (!fs.existsSync(imgPath)) {
-          console.warn(`Image not found: ${imgPath}`);
+          console.warn("SKIP missing image:", imgPath);
           break;
         }
-        const dims = getImageDimensions(imgPath);
+        const imgBuf = fs.readFileSync(imgPath);
+        const { w, h } = pngDimensions(imgPath);
+        // Scale to fit page width (px values for transformation)
+        const scale = Math.min(1, MAX_WIDTH_PX / w);
+        const dispW = Math.round(w * scale);
+        const dispH = Math.round(h * scale);
+
         children.push(
           new Paragraph({
             children: [
               new ImageRun({
-                data: fs.readFileSync(imgPath),
-                transformation: {
-                  width: dims.width,
-                  height: dims.height,
-                },
-                altText: {
-                  title: el.alt,
-                  description: el.alt,
-                  name: path.basename(el.src),
-                },
+                type: "png",
+                data: imgBuf,
+                transformation: { width: dispW, height: dispH },
               }),
             ],
             alignment: AlignmentType.CENTER,
-            spacing: { before: 160, after: 40 },
+            spacing: { before: 200, after: 60 },
           })
         );
         break;
       }
 
-      case "caption":
+      case "cap":
         children.push(
           new Paragraph({
             children: [
               new TextRun({
-                text: el.text,
+                text: el.v,
                 italics: true,
-                size: 18, // 9pt
-                font: "Yu Gothic",
+                size: 18,
+                font: FONT,
                 color: "666666",
               }),
             ],
@@ -214,38 +191,30 @@ async function main() {
         );
         break;
 
-      case "paragraph": {
-        const parts = parseInlineFormatting(el.text);
+      case "p":
         children.push(
           new Paragraph({
-            children: parts.map(
-              (p) =>
-                new TextRun({
-                  text: p.text,
-                  bold: p.bold,
-                  size: 21, // 10.5pt
-                  font: "Yu Gothic",
-                })
-            ),
+            children: inlineRuns(el.v, bodyRun),
             spacing: { before: 0, after: 120 },
-            alignment: AlignmentType.JUSTIFIED,
           })
         );
         break;
-      }
     }
   }
 
   const doc = new Document({
+    creator: "md2docx",
+    description: "OpenClaw専用マシンの選び方",
     sections: [
       {
         properties: {
           page: {
+            size: { width: 11906, height: 16838 }, // A4 in twips
             margin: {
-              top: convertMillimetersToTwip(25),
-              right: convertMillimetersToTwip(25),
-              bottom: convertMillimetersToTwip(25),
-              left: convertMillimetersToTwip(25),
+              top: 1418,  // 25mm
+              right: 1418,
+              bottom: 1418,
+              left: 1418,
             },
           },
         },
@@ -256,7 +225,11 @@ async function main() {
 
   const buffer = await Packer.toBuffer(doc);
   fs.writeFileSync(OUT_PATH, buffer);
-  console.log(`Generated: ${OUT_PATH}`);
+  const sizeMB = (buffer.length / 1024 / 1024).toFixed(1);
+  console.log(`OK: ${OUT_PATH} (${sizeMB} MB)`);
 }
 
-main().catch(console.error);
+main().catch((err) => {
+  console.error("FATAL:", err);
+  process.exit(1);
+});
