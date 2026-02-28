@@ -2,9 +2,9 @@
 
 OpenClawは専用の機械の中で動かすことが推奨されている。現在考えられるのは以下である。
 
-1. Mac mini
-2. Windows mini PC
-3. Raspberry Pi 5
-4. Cloud上のVPS
+1. Mac mini（M1 8GB。パワフルでOSはLinuxライクで使いやすい。ただし品薄で、拡張性も0）
+2. Windows mini PC（AMD Ryzen 5 7430U、N100は非力）
+3. Raspberry Pi 5（省電力がと低価格が魅力。キットにするとミニPCと値段があまり変わらず、メモリの拡張性がない）
+4. Cloud上のVPS（イニシャルコストが非常に安い。CPUはやや非力。インターネット越しで使うためセキュリティリスクが高い）
 
 M1のMac miniならば、中古が5万円以下で流通している。
