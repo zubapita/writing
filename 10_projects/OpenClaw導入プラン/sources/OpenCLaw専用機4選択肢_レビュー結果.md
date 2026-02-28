@@ -1,40 +1,84 @@
-# OpenCLaw専用機4選択肢 価格再確認レポート
+# OpenClaw専用機器4選択肢 価格ファクトチェック結果（再確認）
 
-## レビュー対象
-- 原稿: `sources/OpenCLaw専用機4選択肢.md`
-- レビュー日: 2026-02-28
+更新日: 2026-02-28
+対象原稿: `sources/OpenCLaw専用機4選択肢.md`
 
-## 1. 価格情報のファクトチェック（再調査）
+## 0) 結論（重要）
+- 価格は現時点で「固定金額で示すと不正確」になっている箇所が多い。
+- 特に**中古価格・販売停止状態のモデル**は、記事本文のレンジをそのまま断定しないこと。
+- 記載方針は「**確認日・販売先・在庫状況付き**」か、**“参考レンジ（例示）”** に変更するのが妥当。
+- 重大誤記として、**Contabo Cloud VPS 10の合算を 9.20€ としていた点、Vultr の 4vCPU=8GB=48$ 記載**は訂正対象。
 
-| 項目 | 原稿記載 | 再確認結果 | ステータス | 根拠リンク |
-|---|---|---|---|---|
-| Mac mini M1/M2 中古相場（¥32,000〜54,000/¥49,500〜57,980/¥60,000〜） | 固定レンジとして提示 | **未確認。** 中古相場は日次/地域/在庫で変動。Amazon・メルカリ系でも実在価格は一致しない。Apple認定再生品のM2 8GB/256GBは 3.99?（公式）ではなく `$319（US）`/`256GB`の在庫枠あり。 | ⚠️ | [Apple公式 リファービッシュ品](https://www.apple.com/shop/product/FMFJ3LL/A/refurbished-mac-mini-apple-m2-chip-with-8%E2%80%91core-cpu-and-10%E2%80%91core-gpu), [Yahoo!フリマ実例](https://paypayfleamarket.yahoo.co.jp/item/z512728816), [OfferUp実例](https://offerup.com/item/detail/fa5a8df1-6951-3118-84e2-c82520c55952) |
-| GMKtec NucBox G3（16GB/512GB） | ¥25,000〜30,000 | 公式販売ページは `16GB+512GB` で `USD 119.99`（在庫状況は都度変動）。記事内では金額換算根拠が不足。 | ✅（根拠更新要） | [GMKtec 公式](https://www.gmktec.com/en/products/nucbox-g3-most-cost-effective-mini-pc-with-intel-n100-processor) |
-| Beelink Mini S12 Pro N100（16GB/500GB） | ¥25,000〜35,000 | 公式グローバルページは `USD 249.00`（在庫あり/在庫切れは時点による）。記事の幅は検証しにくいため、確認日・販売先を明記する運用が必要。 | ⚠️ | [Beelink 公式](https://beelinkminipc.com/products/103-beelink-mini-s12-pro-mini-pc) |
-| Minisforum UN100P 16GB/512GB | ¥28,000〜35,000 | 公式販売ページは `USD 191.90`（`Sold out`表示あり）。技術販売頁（Tech-America）では `$177` で確認時在庫有りの報告あり。価格根拠は販売先に依存。 | ⚠️ | [Minisforum公式](https://store.minisforum.com/products/minisforum-un100p), [Minisforum公式（別言語ページ）](https://www.minisforum.com/products/minisforum-un100p-1), [Tech-America](https://www.tech-america.com/item/minisforum-un100p-mini-desktop-computer/un100p-16-512-) |
-| ACEMAGIC Kron Mini K1 | ¥32,000〜40,000 | 公式ページでは `USD 254.00`（セール）/`319.00`（定価）、在庫 `Sold out`。記事価格の時点固定は不可。 | ⚠️ | [ACEMAGIC 公式](https://acemagic.net/products/kronmini-seriesk1) |
-| GEEKOM A5 2025 Edition / R5-7430U | ¥49,990 | 公式系（geekompc）では構成別価格が頻繁に更新（例：5% OFFコード提示）。記事の固定円額は再現性が低い。本文は「公式価格ページ（確認日付付き）」参照へ変更。 | 🔍 | [GEEKOM 公式（A5）](https://www.geekompc.com/geekom-a5-2025-edition-mini-pc/) |
-| Raspberry Pi 5 16GB | 「2025/1時点で $120」→現在価格として提示 | 公式では `2025/01/09` に `$120` で開始、`2026/02` に公式再値上げを宣言（2GB/4GB/8GB/16GBの加算幅明記）。記事は時点を明示して「当初 $120」または「公式値上げ後」を分離する必要。 | ✅（要時点分離） | [公式: 16GB発売](https://www.raspberrypi.com/news/16gb-raspberry-pi-5-on-sale-now-at-120/), [公式: memory-driven rises](https://www.raspberrypi.com/news/more-memory-driven-price-rises/) |
-| Raspberry Pi 5 4GB/8GB価格 | ¥14,080/¥22,440（固定） | 固定金額は不確実。実売は店舗・為替・再販在庫で変動。 | 🔍 | [Raspberry Pi公式 16GB記事](https://www.raspberrypi.com/news/16gb-raspberry-pi-5-on-sale-now-at-120/), [各販売店価格例（確認日付き）](https://www.raspberrypi.com/news/more-memory-driven-price-rises/), [Robot Pi Shop（4GB）](https://robotpishop.com/products/raspberry-pi-5-4gb-ram) |
-| Contabo Cloud VPS 10（東京） | 基本€6.85+2.35? →記載「約€9.20」 | 公式価格ページ: base €4.50。ロケーション fee（Japan）€2.35。合計 `€6.85` が該当。記事の合算値が誤り。 | ❌→✅ 修正 | [Contabo pricing](https://contabo.com/en-us/pricing/), [Contabo location fees](https://contabo.com/en-us/location-fees/) |
-| Oracle Cloud Always Free | 「¥0/24GB常に使える」「ホームリージョン」「回収」| 公式：Always Free は**ホームリージョンの上限内**で最大 4 OCPU/24GB（A1 Flex）利用可。起動失敗時の `Out of host capacity` や請求条件は公式FAQの範囲内。 | ⚠️ | [Always Freeリソース](https://docs.oracle.com/iaas/Content/FreeTier/resourceref.htm), [Oracle FAQ](https://www.oracle.com/ba/cloud/free/faq/) |
-| Vultr（「4 vCPU / 8GBが〜$48」） | 4 vCPU/8GB=$48 | 公式価格表では 4 vCPU/16GB= $96、3 vCPU/8GB= $48。本文は仕様の整合性が崩れている。 | ✅（要記述訂正） | [Vultr Pricing](https://www.vultr.com/pricing/) |
-| OpenClaw要件（Node.js, メモリ） | `Node.js 22以上`など | 公式FAQ: `Node >= 22`、`推奨 2GB+ / 1vCPU+` と整合。 | ✅ | [OpenClaw FAQ](https://docs.openclaw.ai/start/faq/), [OpenClaw 安定版要件](https://openclawdoc.com/docs/getting-started/requirements/) |
+## 1) 価格・在庫情報の再検証
 
-## 2. 「参照リンク付き修正案（原稿置換向け）`
+### OpenClaw 要件（参考）
+- OpenClaw FAQ で `Node >= 22` は明記。
+- VPS要件は「絶対最小 1 vCPU / 1GB RAM / 約500MB」、推奨「1〜2 vCPU、2GB以上」。
+- Raspberry Pi は 512MB〜1GB RAM で動作可能、1台構成時は 2GB推奨（目安）という記載あり。
+- 参照: https://docs.openclaw.ai/help/faq
 
-### 価格セクション（置換推奨文）
-- **Cloud VPS 10（Contabo）**: `€6.85/月（Base €4.50 + Japan location fee €2.35）`
-- **VPS比較**: `Vultrは「3 vCPU/8GB = $48」であり、`4 vCPU`を使うなら `16GB` が前提で `$96`
-- **Raspberry Pi**: `16GBモデルは公式発表では$120だが、2026/2公式価格上昇を反映すると変動。購入時点価格を添付リンク付きで明示`
-- **中古品価格**: `M1/M2 Mac mini`, `N100系 miniPC` は `価格表記を『参考レンジ』として、確認日＋販売先リンク付き` に変更
+### 2) Windows miniPC / Mac mini / Raspberry Pi 価格帯
 
-## 3. 追加すべき記載（脚注/注記）
-1. 本文の価格表には `確認日` と `販売先（公式/中古）` を必ず追加。
-2. 中古/在庫商品は `リンクは個別出品` が必須で、数値は「当該日確認価格」と明示。
-3. `¥0` / 無料枠は、`Always Free eligibility / host capacity / サービス継続条件` とセットで注記。
+- **GMKtec NucBox G3（N100）**
+  - 公式ページは `16+512GB` の表示が限定的（JSベース）で、確認時点の価格表記は変動。
+  - 取得できた値例では `Barebone` が `$119.99`（比較対象 `$149.99`）で、在庫や地域で価格差・表示が異なる。
+  - 参照: https://www.gmktec.com/products/nucbox-g3-most-cost-effective-mini-pc-with-intel-n100-processor
 
-## 4. 参考情報の実装（記事反映例）
-- 見出し例: `価格は購入時点で変動します。以下は2026-02-28時点の確認リンクです。`
-- 表カラム例: `価格（確認時） / 出典 / 確認日 / 更新周期`
-- Cloud VPS行では `¥換算は為替の変動を明記`。
+- **Beelink Mini S12 Pro（N100）**
+  - 公式各地域ページで `€209`（旧セール価、在庫枯渇）の表示を確認したが、時間差が大きく、記事の `25,000〜35,000円` としての固定化は困難。
+  - 参照: https://pl.beelinkminipc.com/products/103-beelink-mini-s12-pro-mini-pc , https://fr.beelinkminipc.com/products/103-beelink-mini-s12-pro-mini-pc
+
+- **MINISFORUM UN100P（N100）**
+  - 公式ストアでは `US $191.90` と表示しつつ在庫状態は `Sold out`。
+  - 参照: https://store.minisforum.com/products/minisforum-un100p-1
+
+- **ACEMAGIC Kron Mini K1（Ryzen 5 7430U）**
+  - 公式2系統のページで在庫・価格が不一致。`$254→$319のセール中`かつ在庫切れ扱いの表示あり。
+  - 参照: https://acemagic.net/products/kronmini-seriesk1 , https://acemagic.com/products/acemagic-k1-mini-pc
+
+- **GEEKOM A5 2026 Edition**
+  - 公式ページ上で `A5 2026 Edition R5-7430U 16GB+512GB/1TB` の選択肢がある一方、価格表示が JS 依存で固定値の引用が難しい。
+  - 価格断定は避け、当該ページへの当日リンク掲載へ。
+  - 参照: https://www.geekompc.com/geekom-a5-mini-pc/
+
+- **Mac mini（M1/M2・中古）**
+  - 記事の固定相場（5万円以下でのM1/M2中古価格レンジ）は、取引市場で時点変動が大きく厳密固定は不可。中古と新品・整備品を混同しやすい。
+  - Apple公式の認証済みリファビッシュ情報を最低1件参照する必要あり。
+  - 参照: https://www.apple.com/shop/product/FMFJ3LL/A/refurbished-mac-mini-apple-m2-chip-with-8-core-cpu-and-10-core-gpu
+
+- **Raspberry Pi 5 16GB / 4GB / 8GB**
+  - 16GB版は2025-01-09に `$120` 発表（掲載先含む）。
+  - 2026-02-02 の公式記事では 16GBは **+60$** の追加上げ（`memory-driven price rises`）が告知され、流通価格が継続変動している。
+  - 4GB/8GBの「4,4,5千円前後」は販売店依存で再確認必須。
+  - 参照: https://www.raspberrypi.com/news/16gb-raspberry-pi-5-on-sale-now-at-120/ , https://www.raspberrypi.com/news/more-memory-driven-price-rises/
+
+### 3) クラウドVPS 価格の見直し
+
+- **Contabo Cloud VPS 10**
+  - 公式価格: `€4.50`。
+  - 日本リージョン追加は `€2.35`（月額）→ 合計 `€6.85`（記事中の「9.20€」は旧解釈/重ね計算ミス）。
+  - 参照: https://contabo.com/en-us/pricing/ , https://contabo.com/en-us/location-fees/
+
+- **Oracle Cloud Always Free**
+  - 公式上は Always Free で `A1.Flex 4 OCPU / 24GB` まで（アカウントのホームリージョン前提）。
+  - “out of host capacity” は容量制約が原因の可能性がある旨記載あり。
+  - 参照: https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier_topic-Always_Free_Resources.htm
+
+- **Vultr（参考）**
+  - 公式価格表で 3vCPU/8GB が `$48`、4vCPU/12GB が `$72`、4vCPU/16GB が `$96`。
+  - 記事の「4vCPU=8GB=`$48`」は表現が不整合。
+  - 参照: https://www.vultr.com/pricing/
+
+## 2) 置換提案（原稿編集用）
+
+- Cloud VPS（Contabo）価格は `3vCPU/8GB/75GBで€4.50 + 日本ロケーション費€2.35 = 月額€6.85（税別）` と明示。
+- Vultr比較では `3vCPU/8GB=$48`、`4vCPU/12GB=$72`、`4vCPU/16GB=$96` を基準に統一。
+- Raspberry Pi、Mac mini、miniPCの価格は
+  - 「**調査日**」「**販売先**」「**在庫状況**」を併記し、旧価格の固定レンジは削除。
+  - 中古市場・再販売在庫は、同一構成でも日次で変動しやすい旨を明記。
+
+## 3) 備考
+
+- 本稿中に挙げた価格は、執筆時点（2026-02-28）での再確認結果を踏まえた修正方針です。
+- 価格の信頼性を担保するには、原稿内表の各セルを次の形式で統一すると再チェック工数が下がります。
+  - `価格（確認時） / 出典 / 在庫状態 / 確認日 / 追記（同日再確認を要する場合）`
