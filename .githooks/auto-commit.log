@@ -12758,3 +12758,13 @@ To github-zuba:zubapita/writing.git
    550264e..b067c69  main -> main
 2026-03-04 04:20:46 プッシュ成功
 2026-03-04 04:25:46 変更を検出
+[main 847d9fa] auto:  1 file changed, 7 insertions(+)
+ 1 file changed, 7 insertions(+)
+2026-03-04 04:25:46 コミット成功
+ERROR: no healthy upstream
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2026-03-04 04:25:48 プッシュ失敗（ネットワークエラー等）
+2026-03-04 04:30:48 変更を検出
